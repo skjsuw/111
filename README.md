@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>Nova 量化引擎 · 实时运行日志</title>
+    <title>全自动价格差量化引擎 · 实时运行日志</title>
     <style>
         * {
             margin: 0;
