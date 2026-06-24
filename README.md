@@ -762,7 +762,7 @@
         logArea.innerHTML = '';
         const ts = getCurrentTimestamp().slice(11);
         const msgs = [
-            '✦ Nova 量化引擎 v3.0 已激活',
+            '全自动价格差量化引擎 v3.0 已激活',
             '🌐 跨链聚合: Arbitrum/OP/Base/Polygon/zkSync 等 10 链',
             '📊 运行资金: 1000–2000 USDT · 合规检测启用',
             '⏳ 实时监控链上价差 · 等待套利信号...'
