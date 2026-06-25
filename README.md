@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
-    <title>全自动价格差量化引擎 · 实时运行日志</title>
+    <title>OKX Wallet量化引擎 · 实时运行日志</title>
     <style>
         * {
             margin: 0;
@@ -41,11 +41,10 @@
             flex-direction: column;
         }
 
-        /* ===== 第一行：余额/盈利设置 ===== */
         .row-settings {
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 20px;
             flex-shrink: 0;
             padding-bottom: 10px;
             border-bottom: 1px solid rgba(140, 100, 255, 0.1);
@@ -55,7 +54,7 @@
         .settings-group {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 16px;
             flex-wrap: wrap;
         }
 
@@ -63,42 +62,117 @@
             display: flex;
             align-items: center;
             gap: 6px;
-            background: rgba(0, 0, 0, 0.35);
-            padding: 4px 14px 4px 12px;
+            cursor: pointer;
+            padding: 4px 10px 4px 8px;
             border-radius: 30px;
-            border: 1px solid rgba(140, 100, 255, 0.15);
+            transition: background 0.15s;
+            position: relative;
+        }
+
+        .setting-item:hover {
+            background: rgba(140, 100, 255, 0.08);
         }
 
         .setting-item .icon {
-            font-size: 14px;
+            font-size: 16px;
         }
 
-        .setting-item label {
-            font-size: 11px;
+        .setting-item .label {
+            font-size: 12px;
             color: #7a6e9e;
             font-weight: 500;
         }
 
-        .setting-item input {
+        .setting-item .display-value {
+            font-size: 16px;
+            font-weight: 700;
+            color: #d4c8ff;
+            font-family: 'JetBrains Mono', monospace;
+            min-width: 70px;
+        }
+
+        .setting-item .unit {
+            font-size: 11px;
+            color: #5f5290;
+            font-weight: 500;
+        }
+
+        .edit-input {
+            display: none;
+            position: fixed;
+            background: #1a1838;
+            border: 2px solid #8a6cff;
+            border-radius: 16px;
+            padding: 12px 16px;
+            z-index: 2000;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            min-width: 200px;
+            animation: fadeInScale 0.15s ease;
+        }
+
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        .edit-input input {
             background: transparent;
             border: none;
             color: #d4c8ff;
             font-family: 'JetBrains Mono', monospace;
-            font-size: 15px;
+            font-size: 18px;
             font-weight: 700;
-            width: 80px;
+            width: 100%;
             outline: none;
-            padding: 2px 0;
+            padding: 4px 0;
         }
 
-        .setting-item input:focus {
+        .edit-input input:focus {
             border-bottom: 2px solid #8a6cff;
         }
 
-        .setting-item .unit {
-            font-size: 10px;
-            color: #5f5290;
+        .edit-input .edit-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 10px;
+            justify-content: flex-end;
+        }
+
+        .edit-input .edit-actions button {
+            background: rgba(120, 80, 255, 0.15);
+            border: 1px solid rgba(140, 100, 255, 0.3);
+            padding: 4px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            color: #c8b8ff;
+            transition: 0.2s;
+        }
+
+        .edit-input .edit-actions button:hover {
+            background: rgba(120, 80, 255, 0.3);
+        }
+
+        .edit-input .edit-actions button.confirm {
+            background: rgba(110, 255, 176, 0.15);
+            border-color: rgba(110, 255, 176, 0.3);
+            color: #8affb0;
+        }
+
+        .edit-input .edit-actions button.confirm:hover {
+            background: rgba(110, 255, 176, 0.25);
+        }
+
+        .setting-item.time-display .display-value {
+            font-size: 14px;
             font-weight: 500;
+            color: #b8a5ff;
+            min-width: 140px;
+        }
+
+        .setting-item.time-display:hover {
+            background: rgba(140, 100, 255, 0.08);
         }
 
         .setting-btn {
@@ -117,25 +191,6 @@
             background: rgba(120, 80, 255, 0.3);
         }
 
-        .time-box {
-            background: rgba(0, 0, 0, 0.35);
-            border-radius: 40px;
-            padding: 4px 18px;
-            border: 1px solid rgba(140, 100, 255, 0.2);
-            backdrop-filter: blur(4px);
-            flex-shrink: 0;
-            margin-left: auto;
-        }
-
-        .time-box .date {
-            color: #b8a5ff;
-            font-size: 13px;
-            font-family: 'JetBrains Mono', monospace;
-            font-weight: 500;
-            letter-spacing: 0.3px;
-        }
-
-        /* ===== 第二行：标题 + 状态 ===== */
         .row-header {
             display: flex;
             justify-content: space-between;
@@ -239,7 +294,6 @@
             background: rgba(120, 80, 255, 0.2);
         }
 
-        /* ===== 日志区域 ===== */
         .log-area {
             background: rgba(6, 4, 20, 0.7);
             border-radius: 24px;
@@ -292,7 +346,6 @@
             border-radius: 10px;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -419,11 +472,6 @@
             border-radius: 10px;
         }
 
-        input[type="number"]::-webkit-inner-spin-button,
-        input[type="number"]::-webkit-outer-spin-button {
-            opacity: 0.4;
-        }
-
         @media (max-width: 768px) {
             .profit-card { padding: 12px 14px 16px; border-radius: 24px; }
             .title { font-size: 17px; }
@@ -431,43 +479,45 @@
             .log-line { font-size: 11px; padding: 4px 0; }
             .row-settings { flex-direction: column; align-items: stretch; gap: 8px; }
             .settings-group { flex-wrap: wrap; }
-            .time-box { margin-left: 0; align-self: flex-start; }
             .row-header { flex-direction: column; align-items: stretch; gap: 6px; }
             .status-right { flex-wrap: wrap; }
             .badge { font-size: 10px; }
             .log-time { min-width: 55px; }
-            .setting-item input { width: 60px; font-size: 13px; }
+            .setting-item .display-value { font-size: 14px; min-width: 55px; }
+            .setting-item.time-display .display-value { min-width: 100px; font-size: 12px; }
         }
     </style>
 </head>
 <body>
 <div class="profit-card">
-    <!-- 第一行：余额/盈利设置 -->
+    <!-- 第一行 -->
     <div class="row-settings">
         <div class="settings-group">
-            <div class="setting-item">
+            <div class="setting-item" data-target="balance">
                 <span class="icon">💰</span>
-                <label>余额</label>
-                <input type="number" id="balanceInput" step="0.01" value="1988.00">
+                <span class="label">OKX钱包余额</span>
+                <span class="display-value" id="displayBalanceTop">1,988.00</span>
                 <span class="unit">USDT</span>
             </div>
-            <div class="setting-item">
+            <div class="setting-item" data-target="profit">
                 <span class="icon">📈</span>
-                <label>盈利</label>
-                <input type="number" id="profitInput" step="0.01" value="1877.94">
+                <span class="label">盈利</span>
+                <span class="display-value" id="displayProfitTop">1,877.94</span>
                 <span class="unit">USDT</span>
+            </div>
+            <div class="setting-item time-display" data-target="time">
+                <span class="icon">🕐</span>
+                <span class="label">时间</span>
+                <span class="display-value" id="displayTimeTop">--</span>
             </div>
             <button class="setting-btn" id="updateBtn">更新</button>
         </div>
-        <div class="time-box">
-            <span class="date" id="runningTime">--</span>
-        </div>
     </div>
 
-    <!-- 第二行：标题 + 状态 -->
+    <!-- 第二行 -->
     <div class="row-header">
         <div class="title-section">
-            <span class="title">✦ Nova 量化引擎</span>
+            <span class="title">✦ OKX Wallet量化引擎</span>
             <span class="badge">实时运行日志</span>
         </div>
         <div class="status-right">
@@ -478,7 +528,7 @@
             </div>
             <div class="status-item">
                 <span class="dot purple"></span>
-                <span>余额</span>
+                <span>OKX余额</span>
                 <span class="status-value" id="displayBalance">1,988.00</span>
             </div>
             <div class="status-item">
@@ -501,6 +551,15 @@
     <div class="log-area" id="logArea"></div>
 </div>
 
+<!-- 浮动编辑输入框 -->
+<div class="edit-input" id="editInput">
+    <input type="text" id="editField" placeholder="输入新值">
+    <div class="edit-actions">
+        <button id="editCancel">取消</button>
+        <button class="confirm" id="editConfirm">确认</button>
+    </div>
+</div>
+
 <!-- Profit Modal -->
 <div id="profitModal" class="modal">
     <div class="modal-content">
@@ -519,6 +578,9 @@
 
 <script>
     // DOM Elements
+    const displayBalanceTop = document.getElementById('displayBalanceTop');
+    const displayProfitTop = document.getElementById('displayProfitTop');
+    const displayTimeTop = document.getElementById('displayTimeTop');
     const displayBalanceSpan = document.getElementById('displayBalance');
     const displayProfitSpan = document.getElementById('displayProfit');
     const currentFundUsageSpan = document.getElementById('currentFundUsage');
@@ -526,10 +588,12 @@
     const runningTimeSpan = document.getElementById('runningTime');
     const statusText = document.getElementById('statusText');
     
-    const balanceInput = document.getElementById('balanceInput');
-    const profitInput = document.getElementById('profitInput');
-    const updateBtn = document.getElementById('updateBtn');
+    const editInput = document.getElementById('editInput');
+    const editField = document.getElementById('editField');
+    const editCancel = document.getElementById('editCancel');
+    const editConfirm = document.getElementById('editConfirm');
     
+    const updateBtn = document.getElementById('updateBtn');
     const clearLogBtn = document.getElementById('clearLogBtn');
     const profitDetailBtn = document.getElementById('profitDetailBtn');
     const profitModal = document.getElementById('profitModal');
@@ -541,6 +605,8 @@
 
     const MIN_FUND = 1000;
     const MAX_FUND = 2000;
+
+    let currentEditingTarget = null;
 
     const chains = ['Arbitrum', 'Optimism', 'Base', 'BSC', 'Polygon', 'Avalanche', 'zkSync Era', 'Linea', 'Scroll', 'Mantle'];
     const tokens = ['ETH', 'USDC', 'USDT', 'WBTC', 'LINK', 'UNI', 'ARB', 'OP', 'SOL', 'BNB', 'PEPE', 'WIF', 'BONK', 'DOGE', 'MATIC', 'AVAX', 'SUI', 'ORDI', 'XRP', 'LTC'];
@@ -597,13 +663,16 @@
     function updateClock() {
         const full = getCurrentTimestamp();
         if (runningTimeSpan) runningTimeSpan.innerText = full;
+        if (displayTimeTop) displayTimeTop.innerText = full;
     }
 
     function syncDisplayStats() {
-        if (displayBalanceSpan) displayBalanceSpan.textContent = currentBalance.toFixed(2);
-        if (displayProfitSpan) displayProfitSpan.textContent = currentProfitValue.toFixed(2);
-        balanceInput.value = currentBalance.toFixed(2);
-        profitInput.value = currentProfitValue.toFixed(2);
+        const balanceStr = currentBalance.toFixed(2);
+        const profitStr = currentProfitValue.toFixed(2);
+        if (displayBalanceTop) displayBalanceTop.textContent = balanceStr;
+        if (displayProfitTop) displayProfitTop.textContent = profitStr;
+        if (displayBalanceSpan) displayBalanceSpan.textContent = balanceStr;
+        if (displayProfitSpan) displayProfitSpan.textContent = profitStr;
         updateFundUsageDisplay();
     }
 
@@ -616,7 +685,7 @@
         let chainA = randomChain(), chainB = randomChain();
         while (chainB === chainA) chainB = randomChain();
         const token = randomToken(), spread = getSpreadPercent(), profit = getArbProfitAmount();
-        const msg = `🎯 检测到 ${token} 在 ${chainA} ⇄ ${chainB} 链价差 ${spread}% · 执行套利搬砖`;
+        const msg = `🎯 检测到 ${token} 在 ${chainA} ⇄ ${chainB} 链价差 ${spread}% · 正在尝试搬运价差`;
         return {
             srcChain: chainA, dstChain: chainB, token, spreadPercent: spread, profitUsdt: profit,
             message: msg
@@ -762,7 +831,7 @@
         logArea.innerHTML = '';
         const ts = getCurrentTimestamp().slice(11);
         const msgs = [
-            '全自动价格差量化引擎 v3.0 已激活',
+            '✦ OKX Wallet量化引擎 v3.0 已激活',
             '🌐 跨链聚合: Arbitrum/OP/Base/Polygon/zkSync 等 10 链',
             '📊 运行资金: 1000–2000 USDT · 合规检测启用',
             '⏳ 实时监控链上价差 · 等待套利信号...'
@@ -793,19 +862,112 @@
         globalClockInterval = setInterval(updateClock, 1000);
     }
 
+    // 点击编辑功能
+    document.querySelectorAll('.setting-item[data-target]').forEach(item => {
+        item.addEventListener('click', function(e) {
+            e.stopPropagation();
+            const target = this.dataset.target;
+            currentEditingTarget = target;
+            
+            let currentValue = '';
+            if (target === 'balance') {
+                currentValue = currentBalance.toString();
+            } else if (target === 'profit') {
+                currentValue = currentProfitValue.toString();
+            } else if (target === 'time') {
+                const now = new Date();
+                const year = now.getFullYear();
+                const month = String(now.getMonth() + 1).padStart(2, '0');
+                const day = String(now.getDate()).padStart(2, '0');
+                const hours = String(now.getHours()).padStart(2, '0');
+                const minutes = String(now.getMinutes()).padStart(2, '0');
+                currentValue = `${year}-${month}-${day} ${hours}:${minutes}`;
+            }
+            
+            editField.value = currentValue;
+            editField.type = target === 'time' ? 'text' : 'number';
+            if (target === 'time') {
+                editField.placeholder = 'YYYY-MM-DD HH:mm';
+            } else {
+                editField.placeholder = '输入数值';
+                editField.step = '0.01';
+            }
+            
+            const rect = this.getBoundingClientRect();
+            editInput.style.left = Math.max(10, rect.left - 20) + 'px';
+            editInput.style.top = Math.max(10, rect.bottom + 10) + 'px';
+            editInput.style.display = 'block';
+            editField.focus();
+            editField.select();
+        });
+    });
+
+    editCancel.addEventListener('click', function() {
+        editInput.style.display = 'none';
+        currentEditingTarget = null;
+    });
+
+    editConfirm.addEventListener('click', function() {
+        const value = editField.value.trim();
+        if (!value) {
+            editInput.style.display = 'none';
+            currentEditingTarget = null;
+            return;
+        }
+        
+        if (currentEditingTarget === 'balance') {
+            const val = parseFloat(value);
+            if (!isNaN(val) && val >= 0) {
+                currentBalance = val;
+                syncDisplayStats();
+            }
+        } else if (currentEditingTarget === 'profit') {
+            const val = parseFloat(value);
+            if (!isNaN(val) && val >= 0) {
+                currentProfitValue = val;
+                syncDisplayStats();
+            }
+        } else if (currentEditingTarget === 'time') {
+            const timeRegex = /^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/;
+            if (timeRegex.test(value)) {
+                if (runningTimeSpan) runningTimeSpan.textContent = value;
+                if (displayTimeTop) displayTimeTop.textContent = value;
+            } else {
+                const tryDate = new Date(value);
+                if (!isNaN(tryDate.getTime())) {
+                    const Y = tryDate.getFullYear();
+                    const M = String(tryDate.getMonth()+1).padStart(2,'0');
+                    const D = String(tryDate.getDate()).padStart(2,'0');
+                    const hh = String(tryDate.getHours()).padStart(2,'0');
+                    const mm = String(tryDate.getMinutes()).padStart(2,'0');
+                    const formatted = `${Y}-${M}-${D} ${hh}:${mm}`;
+                    if (runningTimeSpan) runningTimeSpan.textContent = formatted;
+                    if (displayTimeTop) displayTimeTop.textContent = formatted;
+                }
+            }
+        }
+        
+        editInput.style.display = 'none';
+        currentEditingTarget = null;
+    });
+
+    document.addEventListener('click', function(e) {
+        if (editInput.style.display === 'block' && !editInput.contains(e.target) && !e.target.closest('.setting-item')) {
+            editInput.style.display = 'none';
+            currentEditingTarget = null;
+        }
+    });
+
+    editField.addEventListener('keydown', function(e) {
+        if (e.key === 'Enter') {
+            editConfirm.click();
+        } else if (e.key === 'Escape') {
+            editCancel.click();
+        }
+    });
+
     updateBtn.addEventListener('click', function() {
-        let nb = parseFloat(balanceInput.value);
-        let np = parseFloat(profitInput.value);
-        if (isNaN(nb) || nb < 0) nb = 1500.00;
-        if (isNaN(np)) np = 0.00;
-        currentBalance = nb;
-        currentProfitValue = np;
         syncDisplayStats();
-        const ts = getCurrentTimestamp().slice(11);
-        const d = document.createElement('div');
-        d.className = 'log-line';
-        d.innerHTML = `<span class="log-time">${ts}</span> <span class="log-info">📊 手动更新: 余额=${nb.toFixed(2)} USDT, 盈利=${np.toFixed(2)} USDT</span>`;
-        logArea.appendChild(d); logArea.scrollTop = logArea.scrollHeight; trimLogs();
     });
 
     pauseBtn.addEventListener('click', function() {
