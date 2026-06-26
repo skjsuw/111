@@ -18,12 +18,12 @@
         }
 
         body {
-            background: radial-gradient(circle at 30% 20%, #0f0c29, #1a1a3e, #24243e);
+            background: #f5f7fb;
             font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, 'Poppins', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
-            padding: 12px;
+            padding: 16px;
         }
 
         .profit-card {
@@ -31,23 +31,23 @@
             height: 100%;
             max-width: 1600px;
             max-height: 1000px;
-            background: rgba(16, 14, 38, 0.92);
-            backdrop-filter: blur(18px);
-            border-radius: 40px;
-            padding: 16px 24px 22px;
-            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.7), 0 0 0 1px rgba(120, 80, 255, 0.25);
-            border: 1px solid rgba(140, 100, 255, 0.3);
+            background: #ffffff;
+            border-radius: 32px;
+            padding: 20px 28px 24px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06), 0 8px 24px rgba(0, 0, 0, 0.04);
+            border: 1px solid rgba(0, 0, 0, 0.04);
             display: flex;
             flex-direction: column;
         }
 
+        /* 第一行 */
         .row-settings {
             display: flex;
             align-items: center;
             gap: 20px;
             flex-shrink: 0;
-            padding-bottom: 10px;
-            border-bottom: 1px solid rgba(140, 100, 255, 0.1);
+            padding-bottom: 12px;
+            border-bottom: 1px solid #f0f2f5;
             flex-wrap: wrap;
         }
 
@@ -63,14 +63,15 @@
             align-items: center;
             gap: 6px;
             cursor: pointer;
-            padding: 4px 10px 4px 8px;
+            padding: 6px 14px 6px 10px;
             border-radius: 30px;
             transition: background 0.15s;
             position: relative;
+            background: #f8f9fc;
         }
 
         .setting-item:hover {
-            background: rgba(140, 100, 255, 0.08);
+            background: #eef0f5;
         }
 
         .setting-item .icon {
@@ -79,124 +80,127 @@
 
         .setting-item .label {
             font-size: 12px;
-            color: #7a6e9e;
+            color: #8a8fa8;
             font-weight: 500;
         }
 
         .setting-item .display-value {
             font-size: 16px;
             font-weight: 700;
-            color: #d4c8ff;
+            color: #1a1a2e;
             font-family: 'JetBrains Mono', monospace;
             min-width: 70px;
         }
 
         .setting-item .unit {
             font-size: 11px;
-            color: #5f5290;
+            color: #b0b5c8;
             font-weight: 500;
         }
 
         .edit-input {
             display: none;
             position: fixed;
-            background: #1a1838;
-            border: 2px solid #8a6cff;
+            background: #ffffff;
+            border: 1px solid #d0d5e0;
             border-radius: 16px;
-            padding: 12px 16px;
+            padding: 14px 18px;
             z-index: 2000;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            box-shadow: 0 16px 48px rgba(0, 0, 0, 0.12);
             min-width: 200px;
             animation: fadeInScale 0.15s ease;
         }
 
         @keyframes fadeInScale {
-            from { opacity: 0; transform: scale(0.95); }
+            from { opacity: 0; transform: scale(0.96); }
             to { opacity: 1; transform: scale(1); }
         }
 
         .edit-input input {
             background: transparent;
             border: none;
-            color: #d4c8ff;
+            color: #1a1a2e;
             font-family: 'JetBrains Mono', monospace;
             font-size: 18px;
-            font-weight: 700;
+            font-weight: 600;
             width: 100%;
             outline: none;
             padding: 4px 0;
         }
 
         .edit-input input:focus {
-            border-bottom: 2px solid #8a6cff;
+            border-bottom: 2px solid #6c5ce7;
         }
 
         .edit-input .edit-actions {
             display: flex;
             gap: 10px;
-            margin-top: 10px;
+            margin-top: 12px;
             justify-content: flex-end;
         }
 
         .edit-input .edit-actions button {
-            background: rgba(120, 80, 255, 0.15);
-            border: 1px solid rgba(140, 100, 255, 0.3);
-            padding: 4px 16px;
+            background: #f0f2f5;
+            border: 1px solid #e0e4ec;
+            padding: 4px 18px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            color: #c8b8ff;
+            color: #5a5f7a;
             transition: 0.2s;
         }
 
         .edit-input .edit-actions button:hover {
-            background: rgba(120, 80, 255, 0.3);
+            background: #e4e7ef;
         }
 
         .edit-input .edit-actions button.confirm {
-            background: rgba(110, 255, 176, 0.15);
-            border-color: rgba(110, 255, 176, 0.3);
-            color: #8affb0;
+            background: #6c5ce7;
+            border-color: #6c5ce7;
+            color: #ffffff;
         }
 
         .edit-input .edit-actions button.confirm:hover {
-            background: rgba(110, 255, 176, 0.25);
+            background: #5a4bd1;
         }
 
         .setting-item.time-display .display-value {
             font-size: 14px;
             font-weight: 500;
-            color: #b8a5ff;
+            color: #4a4f6a;
             min-width: 140px;
         }
 
         .setting-item.time-display:hover {
-            background: rgba(140, 100, 255, 0.08);
+            background: #eef0f5;
         }
 
         .setting-btn {
-            background: rgba(120, 80, 255, 0.15);
-            border: 1px solid rgba(140, 100, 255, 0.3);
-            padding: 5px 20px;
+            background: #6c5ce7;
+            border: none;
+            padding: 6px 22px;
             border-radius: 30px;
             font-size: 12px;
             font-weight: 600;
             cursor: pointer;
-            color: #c8b8ff;
+            color: #ffffff;
             transition: 0.2s;
         }
 
         .setting-btn:hover {
-            background: rgba(120, 80, 255, 0.3);
+            background: #5a4bd1;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
         }
 
+        /* 第二行 */
         .row-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-shrink: 0;
-            padding: 8px 0 8px 0;
+            padding: 10px 0 10px 0;
             flex-wrap: wrap;
             gap: 8px;
         }
@@ -209,22 +213,19 @@
         }
 
         .title {
-            font-size: 22px;
+            font-size: 20px;
             font-weight: 700;
-            background: linear-gradient(135deg, #f0eaff 0%, #b7a4ff 50%, #7a5cff 100%);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            letter-spacing: -0.2px;
+            color: #1a1a2e;
+            letter-spacing: -0.3px;
         }
 
         .badge {
             font-size: 11px;
-            color: #8a7eb5;
-            background: rgba(100, 60, 200, 0.15);
-            padding: 2px 14px;
+            color: #8a8fa8;
+            background: #f0f2f5;
+            padding: 3px 14px;
             border-radius: 20px;
-            border: 1px solid rgba(140, 100, 255, 0.2);
+            border: 1px solid #e8ecf2;
         }
 
         .status-right {
@@ -239,78 +240,78 @@
             align-items: center;
             gap: 6px;
             font-size: 12px;
-            color: #8a7eb5;
+            color: #8a8fa8;
         }
 
         .status-item .dot {
-            width: 8px;
-            height: 8px;
+            width: 7px;
+            height: 7px;
             border-radius: 50%;
             display: inline-block;
         }
 
-        .dot.green { background: #6effb0; box-shadow: 0 0 8px rgba(110, 255, 176, 0.3); }
-        .dot.yellow { background: #ffd87a; box-shadow: 0 0 8px rgba(255, 216, 122, 0.2); }
-        .dot.purple { background: #b8a5ff; box-shadow: 0 0 8px rgba(184, 165, 255, 0.2); }
+        .dot.green { background: #00b894; }
+        .dot.yellow { background: #fdcb6e; }
+        .dot.purple { background: #6c5ce7; }
 
         .status-value {
-            color: #d4c8ff;
+            color: #1a1a2e;
             font-weight: 600;
             font-family: monospace;
             font-size: 13px;
         }
 
         .action-btn {
-            background: rgba(100, 60, 200, 0.1);
-            border: 1px solid rgba(140, 100, 255, 0.25);
+            background: #f0f2f5;
+            border: 1px solid #e8ecf2;
             padding: 4px 14px;
             border-radius: 30px;
             font-size: 11px;
             font-weight: 500;
             cursor: pointer;
-            color: #b8a5ff;
+            color: #5a5f7a;
             transition: 0.2s;
         }
 
         .action-btn:hover {
-            background: rgba(100, 60, 200, 0.25);
+            background: #e4e7ef;
         }
 
         .action-btn.danger {
-            border-color: rgba(255, 90, 90, 0.25);
-            color: #ff8a8a;
+            border-color: #fde8e8;
+            color: #e17055;
         }
 
         .action-btn.danger:hover {
-            background: rgba(255, 70, 70, 0.15);
+            background: #fde8e8;
         }
 
         .action-btn.profit {
-            border-color: rgba(140, 100, 255, 0.4);
-            color: #c8b8ff;
+            border-color: #e0ddf5;
+            color: #6c5ce7;
         }
 
         .action-btn.profit:hover {
-            background: rgba(120, 80, 255, 0.2);
+            background: #edeaff;
         }
 
+        /* 日志区域 */
         .log-area {
-            background: rgba(6, 4, 20, 0.7);
-            border-radius: 24px;
+            background: #f8f9fc;
+            border-radius: 20px;
             padding: 16px 20px;
             flex: 1;
             min-height: 0;
             overflow-y: auto;
             font-family: 'JetBrains Mono', 'SF Mono', monospace;
             font-size: 13px;
-            border: 1px solid #2a2850;
-            box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+            border: 1px solid #eef0f5;
             margin-top: 4px;
         }
 
         .log-line {
             padding: 5px 0;
-            border-bottom: 1px solid rgba(31, 29, 66, 0.5);
+            border-bottom: 1px solid #eceff5;
             font-size: 13px;
             line-height: 1.5;
             display: flex;
@@ -319,33 +320,34 @@
         }
 
         .log-time {
-            color: #5f5290;
+            color: #b0b5c8;
             font-weight: 500;
             flex-shrink: 0;
             min-width: 70px;
         }
 
-        .log-scan { color: #8ab8ff; }
-        .log-gas { color: #ffbc6e; }
-        .log-profit { color: #8affb0; font-weight: 600; }
-        .log-arbitrage { color: #ffd87a; background: rgba(255,210,90,0.06); padding: 1px 6px; border-radius: 12px;}
-        .log-warning { color: #ffaa66; }
-        .log-execute { color: #6effd4; }
-        .log-info { color: #b8a5ff; }
-        .log-success { color: #6effb0; }
+        .log-scan { color: #4a6fa5; }
+        .log-gas { color: #e17055; }
+        .log-profit { color: #00b894; font-weight: 600; }
+        .log-arbitrage { color: #6c5ce7; background: rgba(108, 92, 231, 0.06); padding: 1px 6px; border-radius: 12px;}
+        .log-warning { color: #fdcb6e; }
+        .log-execute { color: #00b894; }
+        .log-info { color: #8a8fa8; }
+        .log-success { color: #00b894; font-weight: 600; }
 
         .log-area::-webkit-scrollbar {
             width: 5px;
         }
         .log-area::-webkit-scrollbar-track {
-            background: #0e0c24;
+            background: #f0f2f5;
             border-radius: 10px;
         }
         .log-area::-webkit-scrollbar-thumb {
-            background: #3d3570;
+            background: #d0d5e0;
             border-radius: 10px;
         }
 
+        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -353,49 +355,49 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.85);
-            backdrop-filter: blur(10px);
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
             z-index: 1000;
             justify-content: center;
             align-items: center;
         }
 
         .modal-content {
-            background: #14122e;
-            border-radius: 40px;
+            background: #ffffff;
+            border-radius: 32px;
             max-width: 500px;
             width: 90%;
             max-height: 70vh;
-            border: 1px solid rgba(140, 100, 255, 0.35);
-            box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+            border: 1px solid #eef0f5;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.1);
             display: flex;
             flex-direction: column;
             animation: fadeInUp 0.2s ease;
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px);}
+            from { opacity: 0; transform: translateY(16px);}
             to { opacity: 1; transform: translateY(0);}
         }
 
         .modal-header {
             padding: 18px 24px;
-            border-bottom: 1px solid #2a2850;
+            border-bottom: 1px solid #f0f2f5;
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
 
         .modal-header h3 {
-            color: #b8a5ff;
+            color: #1a1a2e;
             font-size: 18px;
         }
 
         .modal-close {
-            background: rgba(255,70,70,0.15);
+            background: #f0f2f5;
             border: none;
-            color: #ff8a8a;
-            font-size: 22px;
+            color: #8a8fa8;
+            font-size: 20px;
             cursor: pointer;
             width: 30px;
             height: 30px;
@@ -407,7 +409,7 @@
         }
 
         .modal-close:hover {
-            background: rgba(255,70,70,0.4);
+            background: #e4e7ef;
         }
 
         .profit-list {
@@ -417,22 +419,22 @@
         }
 
         .profit-record {
-            background: rgba(10, 8, 28, 0.6);
+            background: #f8f9fc;
             border-radius: 16px;
             padding: 12px 14px;
             margin-bottom: 10px;
-            border-left: 3px solid #8a6cff;
+            border-left: 3px solid #6c5ce7;
         }
 
         .profit-record .record-time {
-            color: #8a7eb5;
+            color: #b0b5c8;
             font-size: 11px;
             font-family: monospace;
             margin-bottom: 4px;
         }
 
         .profit-record .record-detail {
-            color: #d4c8ff;
+            color: #1a1a2e;
             font-size: 13px;
             display: flex;
             justify-content: space-between;
@@ -441,22 +443,22 @@
         }
 
         .record-amount {
-            color: #8affb0;
+            color: #00b894;
             font-weight: bold;
             font-size: 15px;
         }
 
         .empty-profit {
             text-align: center;
-            color: #5f5290;
+            color: #b0b5c8;
             padding: 40px;
         }
 
         .modal-footer {
             padding: 14px 24px;
-            border-top: 1px solid #2a2850;
+            border-top: 1px solid #f0f2f5;
             font-size: 12px;
-            color: #6f6299;
+            color: #8a8fa8;
             text-align: center;
         }
 
@@ -464,16 +466,16 @@
             width: 5px;
         }
         .profit-list::-webkit-scrollbar-track {
-            background: #0e0c24;
+            background: #f0f2f5;
             border-radius: 10px;
         }
         .profit-list::-webkit-scrollbar-thumb {
-            background: #3d3570;
+            background: #d0d5e0;
             border-radius: 10px;
         }
 
         @media (max-width: 768px) {
-            .profit-card { padding: 12px 14px 16px; border-radius: 24px; }
+            .profit-card { padding: 14px 16px 18px; border-radius: 24px; }
             .title { font-size: 17px; }
             .log-area { padding: 10px 12px; font-size: 11px; }
             .log-line { font-size: 11px; padding: 4px 0; }
@@ -543,7 +545,7 @@
             <button class="action-btn profit" id="profitDetailBtn">📋 盈利</button>
             <button class="action-btn danger" id="clearLogBtn">清空</button>
             <button class="action-btn" id="pauseBtn">⏸️ 暂停</button>
-            <button class="action-btn" id="resumeBtn" style="display:none; border-color: rgba(100,255,180,0.4); color: #6effb0;">▶️ 继续</button>
+            <button class="action-btn" id="resumeBtn" style="display:none; border-color: #00b894; color: #00b894;">▶️ 继续</button>
         </div>
     </div>
 
@@ -649,7 +651,7 @@
         if (currentFundUsageSpan) {
             const inRange = isFundInRange();
             currentFundUsageSpan.textContent = inRange ? `${currentBalance.toFixed(0)} USDT` : `⚠️ ${currentBalance.toFixed(0)} USDT`;
-            currentFundUsageSpan.style.color = inRange ? '#a78aff' : '#ff7a7a';
+            currentFundUsageSpan.style.color = inRange ? '#6c5ce7' : '#e17055';
         }
     }
 
@@ -723,7 +725,7 @@
                     <span>💰 ${rec.token} 跨链套利</span>
                     <span class="record-amount">+${rec.amount.toFixed(2)} USDT</span>
                 </div>
-                <div style="font-size:11px;color:#6f6299;margin-top:4px;">${rec.chain1} ⇄ ${rec.chain2} · 价差 ${rec.spread}%</div>
+                <div style="font-size:11px;color:#b0b5c8;margin-top:4px;">${rec.chain1} ⇄ ${rec.chain2} · 价差 ${rec.spread}%</div>
             `;
             profitListDiv.appendChild(div);
         });
@@ -862,7 +864,7 @@
         globalClockInterval = setInterval(updateClock, 1000);
     }
 
-    // 点击编辑功能
+    // 点击编辑
     document.querySelectorAll('.setting-item[data-target]').forEach(item => {
         item.addEventListener('click', function(e) {
             e.stopPropagation();
@@ -975,7 +977,7 @@
         this.style.display = 'none';
         resumeBtn.style.display = 'inline-block';
         statusText.textContent = '已暂停';
-        statusText.style.color = '#ffaa66';
+        statusText.style.color = '#e17055';
         const ts = getCurrentTimestamp().slice(11);
         const d = document.createElement('div');
         d.className = 'log-line';
@@ -988,7 +990,7 @@
         this.style.display = 'none';
         pauseBtn.style.display = 'inline-block';
         statusText.textContent = '运行中';
-        statusText.style.color = '#6effb0';
+        statusText.style.color = '#00b894';
         const ts = getCurrentTimestamp().slice(11);
         const d = document.createElement('div');
         d.className = 'log-line';
