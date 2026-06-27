@@ -40,7 +40,6 @@
             flex-direction: column;
         }
 
-        /* 第一行 */
         .row-settings {
             display: flex;
             align-items: center;
@@ -194,7 +193,6 @@
             box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
         }
 
-        /* 第二行 */
         .row-header {
             display: flex;
             justify-content: space-between;
@@ -295,7 +293,6 @@
             background: #edeaff;
         }
 
-        /* 日志区域 */
         .log-area {
             background: #f8f9fc;
             border-radius: 20px;
@@ -310,7 +307,7 @@
         }
 
         .log-line {
-            padding: 5px 0;
+            padding: 4px 0;
             border-bottom: 1px solid #eceff5;
             font-size: 13px;
             line-height: 1.5;
@@ -323,17 +320,19 @@
             color: #b0b5c8;
             font-weight: 500;
             flex-shrink: 0;
-            min-width: 70px;
+            min-width: 65px;
+            font-size: 12px;
         }
 
         .log-scan { color: #4a6fa5; }
         .log-gas { color: #e17055; }
         .log-profit { color: #00b894; font-weight: 600; }
-        .log-arbitrage { color: #6c5ce7; background: rgba(108, 92, 231, 0.06); padding: 1px 6px; border-radius: 12px;}
+        .log-arbitrage { color: #6c5ce7; }
         .log-warning { color: #fdcb6e; }
         .log-execute { color: #00b894; }
         .log-info { color: #8a8fa8; }
         .log-success { color: #00b894; font-weight: 600; }
+        .log-route { color: #6c5ce7; }
 
         .log-area::-webkit-scrollbar {
             width: 5px;
@@ -347,7 +346,6 @@
             border-radius: 10px;
         }
 
-        /* Modal */
         .modal {
             display: none;
             position: fixed;
@@ -484,7 +482,7 @@
             .row-header { flex-direction: column; align-items: stretch; gap: 6px; }
             .status-right { flex-wrap: wrap; }
             .badge { font-size: 10px; }
-            .log-time { min-width: 55px; }
+            .log-time { min-width: 50px; font-size: 10px; }
             .setting-item .display-value { font-size: 14px; min-width: 55px; }
             .setting-item.time-display .display-value { min-width: 100px; font-size: 12px; }
         }
@@ -609,6 +607,7 @@
     const MAX_FUND = 2000;
 
     let currentEditingTarget = null;
+    let customTime = null;
 
     const chains = ['Arbitrum', 'Optimism', 'Base', 'BSC', 'Polygon', 'Avalanche', 'zkSync Era', 'Linea', 'Scroll', 'Mantle'];
     const tokens = ['ETH', 'USDC', 'USDT', 'WBTC', 'LINK', 'UNI', 'ARB', 'OP', 'SOL', 'BNB', 'PEPE', 'WIF', 'BONK', 'DOGE', 'MATIC', 'AVAX', 'SUI', 'ORDI', 'XRP', 'LTC'];
@@ -644,6 +643,7 @@
     let arbitrageTimeoutId = null;
     let profitRecords = [];
     let isPaused = false;
+    let isFirstLog = true;
 
     function isFundInRange() { return currentBalance >= MIN_FUND && currentBalance <= MAX_FUND; }
     
@@ -657,15 +657,28 @@
 
     function getCurrentTimestamp() {
         const now = new Date();
+        const hh = String(now.getHours()).padStart(2,'0');
+        const mm = String(now.getMinutes()).padStart(2,'0');
+        const ss = String(now.getSeconds()).padStart(2,'0');
+        return `${hh}:${mm}:${ss}`;
+    }
+
+    function getFullTimestamp() {
+        const now = new Date();
         const Y = now.getFullYear(), M = String(now.getMonth()+1).padStart(2,'0'), D = String(now.getDate()).padStart(2,'0');
         const hh = String(now.getHours()).padStart(2,'0'), mm = String(now.getMinutes()).padStart(2,'0'), ss = String(now.getSeconds()).padStart(2,'0');
         return `${Y}-${M}-${D} ${hh}:${mm}:${ss}`;
     }
 
     function updateClock() {
-        const full = getCurrentTimestamp();
-        if (runningTimeSpan) runningTimeSpan.innerText = full;
-        if (displayTimeTop) displayTimeTop.innerText = full;
+        if (customTime !== null) {
+            if (runningTimeSpan) runningTimeSpan.innerText = customTime;
+            if (displayTimeTop) displayTimeTop.innerText = customTime;
+        } else {
+            const full = getFullTimestamp();
+            if (runningTimeSpan) runningTimeSpan.innerText = full;
+            if (displayTimeTop) displayTimeTop.innerText = full;
+        }
     }
 
     function syncDisplayStats() {
@@ -696,7 +709,7 @@
 
     function addProfitRecord(arb, gain) {
         profitRecords.unshift({ 
-            time: getCurrentTimestamp(), 
+            time: getFullTimestamp(), 
             amount: gain, 
             token: arb.token, 
             chain1: arb.srcChain, 
@@ -735,7 +748,7 @@
     function executeSuccessArbitrage(arb) {
         if (!arb) return;
         if (!isFundInRange()) {
-            const tp = getCurrentTimestamp().slice(11);
+            const tp = getCurrentTimestamp();
             const w = document.createElement('div');
             w.className = 'log-line';
             w.innerHTML = `<span class="log-time">${tp}</span> <span class="log-warning">⚠️ 运行资金 ${currentBalance.toFixed(2)} USDT 超出范围 · 套利暂停</span>`;
@@ -747,7 +760,7 @@
         currentBalance += gain; currentProfitValue += gain;
         syncDisplayStats();
         addProfitRecord(arb, gain);
-        const tp = getCurrentTimestamp().slice(11);
+        const tp = getCurrentTimestamp();
         const d = document.createElement('div');
         d.className = 'log-line';
         d.innerHTML = `<span class="log-time">${tp}</span> <span class="log-success">✅ 已成功套利 ${gain.toFixed(2)} USDT 请在OKX钱包账单查看详情</span>`;
@@ -758,14 +771,14 @@
     function handleNewArbitrage(arb) {
         if (!logArea) return;
         if (!isFundInRange()) {
-            const tm = getCurrentTimestamp().slice(11);
+            const tm = getCurrentTimestamp();
             const w = document.createElement('div');
             w.className = 'log-line';
             w.innerHTML = `<span class="log-time">${tm}</span> <span class="log-warning">⚠️ 机会忽略 · 运行资金 ${currentBalance.toFixed(2)} USDT 超出范围</span>`;
             logArea.appendChild(w); logArea.scrollTop = logArea.scrollHeight; trimLogs();
             return;
         }
-        const tm = getCurrentTimestamp().slice(11);
+        const tm = getCurrentTimestamp();
         const d = document.createElement('div');
         d.className = 'log-line';
         d.innerHTML = `<span class="log-time">${tm}</span> <span class="log-arbitrage">📣 ${arb.message}</span>`;
@@ -773,7 +786,7 @@
         if (activeArbitrage !== null) {
             const l = document.createElement('div');
             l.className = 'log-line';
-            l.innerHTML = `<span class="log-time">${getCurrentTimestamp().slice(11)}</span> <span class="log-gas">⚠️ 另一套利进行中 · 机会被抢先</span>`;
+            l.innerHTML = `<span class="log-time">${getCurrentTimestamp()}</span> <span class="log-gas">⚠️ 另一套利进行中 · 机会被抢先</span>`;
             logArea.appendChild(l); logArea.scrollTop = logArea.scrollHeight; trimLogs();
             return;
         }
@@ -788,30 +801,39 @@
     function generateOrdinaryLog() {
         const r = Math.random();
         let msg = '', cls = 'log-scan';
-        if (r < 0.30) { msg = gasMessages[Math.floor(Math.random() * gasMessages.length)]; cls = 'log-gas'; }
-        else if (r < 0.70) { 
+        if (r < 0.28) { 
+            msg = gasMessages[Math.floor(Math.random() * gasMessages.length)]; 
+            cls = 'log-gas'; 
+        }
+        else if (r < 0.68) { 
             const c = randomChain(); 
             const template = scanMessages[Math.floor(Math.random() * scanMessages.length)];
             msg = template.replace('{chain}', c);
             cls = 'log-scan'; 
         }
-        else { msg = statusMessages[Math.floor(Math.random() * statusMessages.length)]; cls = 'log-scan'; }
-        if (Math.random() < 0.10) msg = `🔁 跨链路由更新: ${randomChain()} → ${randomChain()}`;
+        else if (r < 0.88) { 
+            msg = statusMessages[Math.floor(Math.random() * statusMessages.length)]; 
+            cls = 'log-scan'; 
+        }
+        else { 
+            msg = `🔁 跨链路由更新: ${randomChain()} → ${randomChain()}`;
+            cls = 'log-route';
+        }
         return { msg, type: cls };
     }
 
     function addQuantLog() {
         if (isPaused) return;
         if (!logArea) return;
-        let chance = 0.05;
-        if (activeArbitrage !== null) chance = 0.015;
+        let chance = 0.055;
+        if (activeArbitrage !== null) chance = 0.018;
         if (Math.random() < chance && activeArbitrage === null) {
             const arb = generateArbitrageOpportunity();
             handleNewArbitrage(arb);
             return;
         }
         const ord = generateOrdinaryLog();
-        const ts = getCurrentTimestamp().slice(11);
+        const ts = getCurrentTimestamp();
         const d = document.createElement('div');
         d.className = 'log-line';
         d.innerHTML = `<span class="log-time">${ts}</span> <span class="${ord.type}">${ord.msg}</span>`;
@@ -821,7 +843,7 @@
     function clearLogsHandler() {
         if (!logArea) return;
         logArea.innerHTML = '';
-        const ts = getCurrentTimestamp().slice(11);
+        const ts = getCurrentTimestamp();
         const d = document.createElement('div');
         d.className = 'log-line';
         d.innerHTML = `<span class="log-time">${ts}</span> <span class="log-info">🗑️ 日志已清空 · 引擎继续运行</span>`;
@@ -831,19 +853,12 @@
     function initRunningLogs() {
         if (!logArea) return;
         logArea.innerHTML = '';
-        const ts = getCurrentTimestamp().slice(11);
-        const msgs = [
-            '✦ OKX Wallet量化引擎 v3.0 已激活',
-            '🌐 跨链聚合: Arbitrum/OP/Base/Polygon/zkSync 等 10 链',
-            '📊 运行资金: 1000–2000 USDT · 合规检测启用',
-            '⏳ 实时监控链上价差 · 等待套利信号...'
-        ];
-        msgs.forEach(m => {
-            const d = document.createElement('div');
-            d.className = 'log-line';
-            d.innerHTML = `<span class="log-time">${ts}</span> <span class="log-info">✦ ${m}</span>`;
-            logArea.appendChild(d);
-        });
+        const ts = getCurrentTimestamp();
+        // 直接添加第一条日志，不显示启动信息
+        const d = document.createElement('div');
+        d.className = 'log-line';
+        d.innerHTML = `<span class="log-time">${ts}</span> <span class="log-info">✅ 引擎已启动 · 开始监控</span>`;
+        logArea.appendChild(d);
     }
 
     function startQuantEngine() {
@@ -877,13 +892,17 @@
             } else if (target === 'profit') {
                 currentValue = currentProfitValue.toString();
             } else if (target === 'time') {
-                const now = new Date();
-                const year = now.getFullYear();
-                const month = String(now.getMonth() + 1).padStart(2, '0');
-                const day = String(now.getDate()).padStart(2, '0');
-                const hours = String(now.getHours()).padStart(2, '0');
-                const minutes = String(now.getMinutes()).padStart(2, '0');
-                currentValue = `${year}-${month}-${day} ${hours}:${minutes}`;
+                if (customTime !== null) {
+                    currentValue = customTime;
+                } else {
+                    const now = new Date();
+                    const year = now.getFullYear();
+                    const month = String(now.getMonth() + 1).padStart(2, '0');
+                    const day = String(now.getDate()).padStart(2, '0');
+                    const hours = String(now.getHours()).padStart(2, '0');
+                    const minutes = String(now.getMinutes()).padStart(2, '0');
+                    currentValue = `${year}-${month}-${day} ${hours}:${minutes}`;
+                }
             }
             
             editField.value = currentValue;
@@ -932,8 +951,9 @@
         } else if (currentEditingTarget === 'time') {
             const timeRegex = /^\d{4}-\d{2}-\d{2}\s+\d{2}:\d{2}$/;
             if (timeRegex.test(value)) {
-                if (runningTimeSpan) runningTimeSpan.textContent = value;
-                if (displayTimeTop) displayTimeTop.textContent = value;
+                customTime = value;
+                if (runningTimeSpan) runningTimeSpan.textContent = customTime;
+                if (displayTimeTop) displayTimeTop.textContent = customTime;
             } else {
                 const tryDate = new Date(value);
                 if (!isNaN(tryDate.getTime())) {
@@ -943,8 +963,9 @@
                     const hh = String(tryDate.getHours()).padStart(2,'0');
                     const mm = String(tryDate.getMinutes()).padStart(2,'0');
                     const formatted = `${Y}-${M}-${D} ${hh}:${mm}`;
-                    if (runningTimeSpan) runningTimeSpan.textContent = formatted;
-                    if (displayTimeTop) displayTimeTop.textContent = formatted;
+                    customTime = formatted;
+                    if (runningTimeSpan) runningTimeSpan.textContent = customTime;
+                    if (displayTimeTop) displayTimeTop.textContent = customTime;
                 }
             }
         }
@@ -978,7 +999,7 @@
         resumeBtn.style.display = 'inline-block';
         statusText.textContent = '已暂停';
         statusText.style.color = '#e17055';
-        const ts = getCurrentTimestamp().slice(11);
+        const ts = getCurrentTimestamp();
         const d = document.createElement('div');
         d.className = 'log-line';
         d.innerHTML = `<span class="log-time">${ts}</span> <span class="log-warning">⏸️ 引擎已暂停 · 等待恢复</span>`;
@@ -991,7 +1012,7 @@
         pauseBtn.style.display = 'inline-block';
         statusText.textContent = '运行中';
         statusText.style.color = '#00b894';
-        const ts = getCurrentTimestamp().slice(11);
+        const ts = getCurrentTimestamp();
         const d = document.createElement('div');
         d.className = 'log-line';
         d.innerHTML = `<span class="log-time">${ts}</span> <span class="log-execute">▶️ 引擎已恢复 · 继续监控</span>`;
